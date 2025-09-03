@@ -1,0 +1,23 @@
+# Core
+numpy
+pandas
+scikit-learn
+scipy
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# ML Models
+xgboost
+lightgbm
+
+# Dashboard
+streamlit
+
+# Saving Models
+joblib
+
+# Optional (if using Jupyter)
+notebook

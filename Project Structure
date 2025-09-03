@@ -1,0 +1,22 @@
+employee-attrition-prediction/
+│
+├── data/
+│   ├── employee_attrition_dataset.csv
+│   ├── employee_attrition_dataset_10000.csv
+│
+├── notebooks/
+│   ├── 1_data_preprocessing.ipynb
+│   ├── 2_eda.ipynb
+│   ├── 3_sentiment_analysis.ipynb
+│   ├── 4_model_training.ipynb
+│   ├── 5_dashboard.ipynb
+│
+├── models/
+│   ├── attrition_model.pkl
+│   ├── scaler.pkl
+│
+├── dashboard/
+│   ├── app.py   ← final Streamlit app (converted from 5_dashboard.ipynb)
+│
+├── requirements.txt
+├── README.md
