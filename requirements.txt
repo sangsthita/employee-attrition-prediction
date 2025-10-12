@@ -1,23 +1,10 @@
-# Core
-numpy
 pandas
+numpy
 scikit-learn
-scipy
-
-# Visualization
+streamlit
+imbalanced-learn
+xgboost
 matplotlib
 seaborn
-plotly
-
-# ML Models
-xgboost
-lightgbm
-
-# Dashboard
-streamlit
-
-# Saving Models
 joblib
-
-# Optional (if using Jupyter)
-notebook
+vaderSentiment
