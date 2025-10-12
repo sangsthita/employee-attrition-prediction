@@ -5,7 +5,7 @@ import joblib
 from src.data_preprocessing import load_data, get_features_target, compute_sentiment
 
 # Set page config
-st.set_page_config(page_title="Employee Attrition Prediction", layout="wide")
+st.set_page_config(page_title="Employee Attrition Prediction", layout="wide", initial_sidebar_state="expanded")
 
 # Load data
 data_path = "F:\\Sangsthita-Project\\employee-attrition-prediction\\data\\processed\\employee_attrition_with_sentiment.csv"
@@ -42,7 +42,7 @@ if selected_dept != 'All':
 if selected_sentiment != 'All':
     df_filtered = df_filtered[df_filtered['sentiment_label'] == selected_sentiment]
 
-# --- DARK THEME CSS ---
+# --- ENHANCED DARK THEME CSS ---
 st.markdown("""
     <style>
     /* Main App Background */
@@ -60,21 +60,22 @@ st.markdown("""
     /* Titles & Headers */
     h1, h2, h3, h4, h5, h6 {
         color: #58A6FF !important;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Arial', sans-serif;
     }
 
     /* Paragraph & Labels */
     p, div, span, label {
         color: #E6EDF3 !important;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Arial', sans-serif;
     }
 
     /* Metric Boxes */
     .stMetric {
         background-color: #21262D !important;
         border-radius: 10px;
-        padding: 12px;
+        padding: 15px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        color: #FFFFFF !important;
     }
 
     /* Buttons */
@@ -85,6 +86,7 @@ st.markdown("""
         border-radius: 8px;
         padding: 0.6em 1em;
         font-size: 1em;
+        transition: background-color 0.3s;
     }
     .stButton>button:hover {
         background-color: #2EA043 !important;
@@ -94,12 +96,41 @@ st.markdown("""
     .stSelectbox, .stTextInput, .stNumberInput, .stTextArea {
         background-color: #21262D !important;
         color: #F0F6FC !important;
+        border: 1px solid #30363D !important;
         border-radius: 6px !important;
+    }
+    .stSelectbox div, .stTextInput div, .stNumberInput div, .stTextArea div {
+        color: #F0F6FC !important;
     }
 
     /* Plotly Chart Background */
-    .js-plotly-plot {
+    .js-plotly-plot .plotly .modebar {
+        background-color: #161B22 !important;
+    }
+    .js-plotly-plot .plotly {
         background-color: #0D1117 !important;
+    }
+
+    /* Tabs */
+    .stTabs [data-testid="stTab"] {
+        background-color: #21262D !important;
+        color: #FFFFFF !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #30363D !important;
+        color: #58A6FF !important;
+    }
+
+    /* Expanders */
+    .stExpander {
+        background-color: #21262D !important;
+        border: 1px solid #30363D !important;
+        border-radius: 6px;
+    }
+
+    /* Horizontal Line */
+    hr {
+        border-color: #30363D !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -116,44 +147,65 @@ if page == 'Home':
     - **Prediction**: Input employee details to assess attrition risk.
     """)
 
+    # Add an expander for additional info
+    with st.expander("Learn More"):
+        st.markdown("""
+        - **Sentiment Analysis**: Uses VADER to score feedback from 1 (negative) to 4.25 (positive).
+        - **Model Enhancements**: Features scaling, imbalance handling with SMOTE, and hyperparameter tuning.
+        - **Filters**: Interactive filters for department and sentiment in the dashboard.
+        """)
+
 elif page == 'Dashboard':
     st.title('Attrition Insights Dashboard')
-    st.markdown("### Key Metrics")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric('Attrition Rate', f'{df_filtered["attrition"].mean() * 100:.2f}%', delta_color="inverse")
-    with col2:
-        if 'sentiment_score' in df_filtered.columns:
-            st.metric('Average Sentiment Score', f'{df_filtered["sentiment_score"].mean():.2f}', delta_color="normal")
     
-    st.markdown("### Sentiment Analysis")
-    st.subheader('Sentiment Label Distribution')
-    fig = px.histogram(df_filtered, x='sentiment_label', color='sentiment_label',
-                       color_discrete_map={'Negative': '#FF6B6B', 'Neutral': '#9CA3AF', 'Positive': '#10B981'},
-                       labels={'sentiment_label': 'Sentiment'})
-    fig.update_layout(
-        height=400, 
-        margin=dict(l=20, r=20, t=50, b=20),
-        font=dict(family="Segoe UI", size=12, color="#E6EDF3"),
-        plot_bgcolor="#0D1117",
-        paper_bgcolor="#0D1117",
-        title_font=dict(color="#58A6FF")
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    # Use tabs for organized view
+    tab1, tab2 = st.tabs(["Key Metrics & Sentiment", "Model Insights"])
     
-    st.markdown("### Model Insights")
-    st.subheader('Top 10 Features Driving Attrition')
-    fig = px.bar(fi_df.head(10), x='importance', y='feature', orientation='h',
-                 color='importance', color_continuous_scale=['#58A6FF', '#1F6FEB'])
-    fig.update_layout(
-        height=400, 
-        margin=dict(l=20, r=20, t=50, b=20),
-        font=dict(family="Segoe UI", size=12, color="#E6EDF3"),
-        plot_bgcolor="#0D1117",
-        paper_bgcolor="#0D1117",
-        title_font=dict(color="#58A6FF")
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with tab1:
+        st.markdown("### Key Metrics")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric('Attrition Rate', f'{df_filtered["attrition"].mean() * 100:.2f}%', delta_color="inverse")
+        with col2:
+            if 'sentiment_score' in df_filtered.columns:
+                st.metric('Average Sentiment Score', f'{df_filtered["sentiment_score"].mean():.2f}', delta_color="normal")
+        with col3:
+            st.metric('Total Employees', len(df_filtered))
+        
+        st.markdown("<hr>", unsafe_allow_html=True)
+        
+        st.subheader('Sentiment Label Distribution')
+        fig = px.histogram(df_filtered, x='sentiment_label', color='sentiment_label',
+                           color_discrete_map={'Negative': '#EF4444', 'Neutral': '#A1A1AA', 'Positive': '#10B981'},
+                           labels={'sentiment_label': 'Sentiment'})
+        fig.update_layout(
+            height=450,
+            margin=dict(l=20, r=20, t=50, b=20),
+            font=dict(family="Arial", size=12, color="#E6EDF3"),
+            plot_bgcolor="#0D1117",
+            paper_bgcolor="#0D1117",
+            title_font=dict(color="#58A6FF"),
+            bargap=0.2,
+            showlegend=False
+        )
+        fig.update_traces(marker_line_width=1, marker_line_color="#30363D")
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with tab2:
+        st.subheader('Top 10 Features Driving Attrition')
+        fig = px.bar(fi_df.head(10), x='importance', y='feature', orientation='h',
+                     color='importance', color_continuous_scale=['#60A5FA', '#1D4ED8'])
+        fig.update_layout(
+            height=450,
+            margin=dict(l=20, r=20, t=50, b=20),
+            font=dict(family="Arial", size=12, color="#E6EDF3"),
+            plot_bgcolor="#0D1117",
+            paper_bgcolor="#0D1117",
+            title_font=dict(color="#58A6FF"),
+            coloraxis_showscale=False
+        )
+        fig.update_traces(marker_line_width=1, marker_line_color="#30363D")
+        st.plotly_chart(fig, use_container_width=True)
 
 elif page == 'Prediction':
     st.title('Predict Employee Attrition')
@@ -219,6 +271,7 @@ elif page == 'Prediction':
         }
         df_input = pd.DataFrame([input_data])
         X_input, _ = get_features_target(df_input, apply_sentiment=True)
+        # Align columns with training data
         missing_cols = set(model.named_steps['scaler'].feature_names_in_) - set(X_input.columns)
         for col in missing_cols:
             X_input[col] = 0
