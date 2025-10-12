@@ -34,7 +34,7 @@ Prediction: Allows input of employee details to predict attrition probability.
 Installation
 
 Clone the Repository:
-git clone <https://github.com/sangsthita/employee-attrition-prediction.git>
+git clone <repository-url>
 cd Employee-Attrition-Prediction
 
 
@@ -105,5 +105,4 @@ Follow the existing code style.
 License
 This project is licensed under the MIT License - see the LICENSE file for details (if applicable).
 Contact
-For questions or support, please open an issue on the repository or contact the project maintainer.
-Acknowledgments
+For questions or support, please open an issue on the
