@@ -4,14 +4,14 @@ import plotly.express as px
 import joblib
 from src.data_preprocessing import load_data, get_features_target, compute_sentiment
 
-# Set page config for better appearance
+# Set page config
 st.set_page_config(page_title="Employee Attrition Prediction", layout="wide")
 
 # Load data
 data_path = "F:\\Sangsthita-Project\\employee-attrition-prediction\\data\\processed\\employee_attrition_with_sentiment.csv"
 df = load_data(data_path)
 
-# Map numeric categories to names
+# Mapping
 dept_map = {0: 'Sales', 1: 'R&D', 2: 'HR', 3: 'Finance', 4: 'IT'}
 job_role_map = {0: 'Sales Executive', 1: 'Research Scientist', 2: 'Lab Technician', 3: 'Manufacturing Director'}
 df['department_name'] = df['department'].map(dept_map)
@@ -42,19 +42,69 @@ if selected_dept != 'All':
 if selected_sentiment != 'All':
     df_filtered = df_filtered[df_filtered['sentiment_label'] == selected_sentiment]
 
-# Custom CSS for professional styling
+# --- DARK THEME CSS ---
 st.markdown("""
     <style>
-    .main { background-color: #f8fafc; }
-    .stMetric { background-color: #ffffff; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .stSidebar { background-color: #e2e8f0; }
-    h1 { color: #1e3a8a; font-family: 'Arial', sans-serif; }
-    h2, h3 { color: #334155; font-family: 'Arial', sans-serif; }
-    .stButton>button { background-color: #2563eb; color: white; border-radius: 8px; font-family: 'Arial', sans-serif; }
-    .stSelectbox { background-color: #ffffff; border-radius: 5px; }
+    /* Main App Background */
+    .stApp {
+        background-color: #0D1117;
+        color: #F5F5F5;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #161B22 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Titles & Headers */
+    h1, h2, h3, h4, h5, h6 {
+        color: #58A6FF !important;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Paragraph & Labels */
+    p, div, span, label {
+        color: #E6EDF3 !important;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Metric Boxes */
+    .stMetric {
+        background-color: #21262D !important;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    /* Buttons */
+    .stButton>button {
+        background-color: #238636 !important;
+        color: white !important;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6em 1em;
+        font-size: 1em;
+    }
+    .stButton>button:hover {
+        background-color: #2EA043 !important;
+    }
+
+    /* Inputs */
+    .stSelectbox, .stTextInput, .stNumberInput, .stTextArea {
+        background-color: #21262D !important;
+        color: #F0F6FC !important;
+        border-radius: 6px !important;
+    }
+
+    /* Plotly Chart Background */
+    .js-plotly-plot {
+        background-color: #0D1117 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
+# --- Pages ---
 if page == 'Home':
     st.title('Employee Attrition Prediction')
     st.markdown("""
@@ -64,11 +114,11 @@ if page == 'Home':
     - **Models**: Logistic Regression, Random Forest, XGBoost with scaling and SMOTE.
     - **Dashboard**: Key insights on attrition and sentiment trends.
     - **Prediction**: Input employee details to assess attrition risk.
-    """, unsafe_allow_html=True)
+    """)
 
 elif page == 'Dashboard':
     st.title('Attrition Insights Dashboard')
-    st.markdown("### Key Metrics", unsafe_allow_html=True)
+    st.markdown("### Key Metrics")
     col1, col2 = st.columns(2)
     with col1:
         st.metric('Attrition Rate', f'{df_filtered["attrition"].mean() * 100:.2f}%', delta_color="inverse")
@@ -76,31 +126,32 @@ elif page == 'Dashboard':
         if 'sentiment_score' in df_filtered.columns:
             st.metric('Average Sentiment Score', f'{df_filtered["sentiment_score"].mean():.2f}', delta_color="normal")
     
-    st.markdown("### Sentiment Analysis", unsafe_allow_html=True)
+    st.markdown("### Sentiment Analysis")
     st.subheader('Sentiment Label Distribution')
     fig = px.histogram(df_filtered, x='sentiment_label', color='sentiment_label',
-                       color_discrete_map={'Negative': '#dc2626', 'Neutral': '#64748b', 'Positive': '#15803d'},
+                       color_discrete_map={'Negative': '#FF6B6B', 'Neutral': '#9CA3AF', 'Positive': '#10B981'},
                        labels={'sentiment_label': 'Sentiment'})
     fig.update_layout(
         height=400, 
         margin=dict(l=20, r=20, t=50, b=20),
-        font=dict(family="Arial", size=12, color="#334155"),
-        title_font=dict(family="Arial", size=16, color="#1e3a8a"),
-        plot_bgcolor="#ffffff",
-        bargap=0.2
+        font=dict(family="Segoe UI", size=12, color="#E6EDF3"),
+        plot_bgcolor="#0D1117",
+        paper_bgcolor="#0D1117",
+        title_font=dict(color="#58A6FF")
     )
     st.plotly_chart(fig, use_container_width=True)
     
-    st.markdown("### Model Insights", unsafe_allow_html=True)
+    st.markdown("### Model Insights")
     st.subheader('Top 10 Features Driving Attrition')
     fig = px.bar(fi_df.head(10), x='importance', y='feature', orientation='h',
-                 color='importance', color_continuous_scale=['#93c5fd', '#2563eb'])
+                 color='importance', color_continuous_scale=['#58A6FF', '#1F6FEB'])
     fig.update_layout(
         height=400, 
         margin=dict(l=20, r=20, t=50, b=20),
-        font=dict(family="Arial", size=12, color="#334155"),
-        title_font=dict(family="Arial", size=16, color="#1e3a8a"),
-        plot_bgcolor="#ffffff"
+        font=dict(family="Segoe UI", size=12, color="#E6EDF3"),
+        plot_bgcolor="#0D1117",
+        paper_bgcolor="#0D1117",
+        title_font=dict(color="#58A6FF")
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -168,7 +219,6 @@ elif page == 'Prediction':
         }
         df_input = pd.DataFrame([input_data])
         X_input, _ = get_features_target(df_input, apply_sentiment=True)
-        # Align columns with training data
         missing_cols = set(model.named_steps['scaler'].feature_names_in_) - set(X_input.columns)
         for col in missing_cols:
             X_input[col] = 0
