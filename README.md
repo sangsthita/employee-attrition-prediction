@@ -71,7 +71,7 @@ This project aims to predict employee attrition using HR data combined with sent
    ```bash
    streamlit run app.py
    ```
-   - Access the app at `http://localhost:8501` in your browser.
+   - Access the app at 'https://employee-attritions.streamlit.app/' in your browser.
    - Navigate using the sidebar: **Home**, **Dashboard**, or **Prediction**.
 
 2. **Explore Notebooks**:
