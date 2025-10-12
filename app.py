@@ -8,7 +8,8 @@ from src.data_preprocessing import load_data, get_features_target, compute_senti
 st.set_page_config(page_title="Employee Attrition Prediction", layout="wide", initial_sidebar_state="expanded")
 
 # Load data
-data_path = "F:\\Sangsthita-Project\\employee-attrition-prediction\\data\\processed\\employee_attrition_with_sentiment.csv"
+# data_path = "F:\\Sangsthita-Project\\employee-attrition-prediction\\data\\processed\\employee_attrition_with_sentiment.csv"
+data_path = 'data/processed/employee_attrition_with_sentiment.csv'
 df = load_data(data_path)
 
 # Mapping
